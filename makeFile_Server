@@ -1,10 +1,10 @@
 CPP = g++ # компилятор
-BIN_DIR = bin
+BIN_DIR = ./ServerTCP/bin
 FLAGS = -std=c++2a -stdlib=libc++ # флаги компиляции
-TARGETSRC = main.cpp # главный main файл
-TARGET = chat # цель -> исполняемый файл
+TARGETSRC = ./ServerTCP/main.cpp # главный main файл
+TARGET = server # цель -> исполняемый файл
 LIB = library.a # промежуточная библиотека
-SOURCES = $(patsubst %.cpp,%,$(wildcard ./Project/*.cpp)) # файлы ресурсов ( Все cpp файлы в каталоге Project)
+SOURCES = $(patsubst %.cpp,%,$(wildcard ./ServerTCP/*.cpp)) # файлы ресурсов ( Все cpp файлы в каталоге Project)
 
 # Основная цель зависит от библиотеки lib
 all: 	$(TARGETSRC) lib
