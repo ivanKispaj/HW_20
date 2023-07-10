@@ -1,0 +1,25 @@
+CPP = g++ # компилятор
+BIN_DIR = bin
+FLAGS = -std=c++2a -stdlib=libc++ # флаги компиляции
+TARGETSRC = main.cpp # главный main файл
+TARGET = chat # цель -> исполняемый файл
+LIB = library.a # промежуточная библиотека
+SOURCES = $(patsubst %.cpp,%,$(wildcard ./Project/*.cpp)) # файлы ресурсов ( Все cpp файлы в каталоге Project)
+
+# Основная цель зависиьт от библиотеки lib
+all: 	$(TARGETSRC) lib
+		$(CPP) $(FLAGS) -o $(BIN_DIR)/$(TARGET) $(TARGETSRC) -L. $(BIN_DIR)/$(LIB)
+		rm -rf $(SOURCES:=.o) $(BIN_DIR)/$(LIB)
+lib: 					# В цикле создаем все объектные файлы
+		$(foreach file,$(SOURCES),\
+		$(CPP) $(FLAGS) -c -o $(file).o $(file).cpp ;)
+		ar rc $(BIN_DIR)/$(LIB) $(SOURCES:=.o) 
+
+install:
+	install $(BIN_DIR)/$(TARGET) ~/Desktop
+
+uninstall: 
+	rm -rf ~/Desktop/$(TARGET)
+
+print-%  : ; @echo $* = $($*) #для вывода в консоль значения переменных (для теста использовал) -> make -f makefile print-SOURCES
+
