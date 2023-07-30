@@ -1,5 +1,5 @@
 CPP = g++ # компилятор
-BIN_DIR = bin
+BIN_DIR = $(PWD)/bin
 FLAGS = -std=c++2a -stdlib=libc++ -fdiagnostics-color=always # флаги компиляции
 TARGETSRC = main.cpp # главный main файл
 TARGET = chat # цель -> исполняемый файл

@@ -1,5 +1,5 @@
 CPP = g++ # компилятор
-BIN_DIR = ./ServerTCP/bin
+BIN_DIR = $(PWD)/ServerTCP/bin
 FLAGS = -std=c++2a -stdlib=libc++ # флаги компиляции
 TARGETSRC = ./ServerTCP/main.cpp # главный main файл
 TARGET = server # цель -> исполняемый файл
