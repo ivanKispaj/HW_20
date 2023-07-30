@@ -11,6 +11,7 @@ all: 	$(TARGETSRC) lib
 		$(CPP) $(FLAGS) -o $(BIN_DIR)/$(TARGET) $(TARGETSRC) -L. $(BIN_DIR)/$(LIB)
 		rm -rf $(SOURCES:=.o) $(BIN_DIR)/$(LIB)
 lib: 					# В цикле создаем все объектные файлы
+		mkdir -p $(BIN_DIR)
 		$(foreach file,$(SOURCES),\
 		$(CPP) $(FLAGS) -c -o $(file).o $(file).cpp ;)
 		ar rc $(BIN_DIR)/$(LIB) $(SOURCES:=.o) 
