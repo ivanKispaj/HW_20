@@ -13,7 +13,8 @@
 #include "UserNotFoundException.h"
 #include <map>
 #include <iostream>
-#include <fstream>
+#include <vector>
+#include <stdlib.h>
 
 template <typename T>
 class DBCoreMap : public IDBCore<T>
@@ -117,55 +118,17 @@ public:
         }
         return nullptr;
     }
-
-    void clearData() override
+    bool isUnique(std::string &login) override
     {
-        _table.clear();
+        for (auto it = _table.begin(); it != _table.end(); it++)
+        {
+            if (it->second.getUserLogin() == login)
+            {
+                return false;
+            }
+        }
+        return true;
     }
-//     char *parseDataToBinary(int &size) override
-//     {
-//         std::vector<char *> data;
-
-//         for (auto it = _table.begin(); it != _table.end(); it++)
-//         {
-//             int sizeData{0};
-//             char *temp = it->second.parseToBinaryData(sizeData);
-//             char res[sizeData + sizeof(sizeData)];
-//             bzero(res, sizeData + sizeof(sizeData));
-//             memcpy(res, &sizeData, sizeof(sizeData));
-//             memcpy(res + sizeof(sizeData), temp, sizeData);
-//             size += (sizeData + sizeof(sizeData));
-//             data.push_back(res);
-//             delete[] temp;
-//         }
-
-//         int sizeArray = data.size(); // array size
-//         char *resData = new char[(size + sizeof(sizeArray))];
-//         bzero(resData, (size + sizeof(sizeArray)));
-
-//         memcpy(resData, &sizeArray, sizeof(sizeArray)); // первое размер массива
-
-//         memcpy(resData + sizeof(sizeArray), &data[0], size); // данные массива
-//         size += sizeof(sizeArray);                           // размер всех данных
-//         return resData;
-//     }
-
-//     std::vector<char*> parseToDataFromBinary(int size, char *data) override
-//     {
-
-
-//         std::vector<char *> resData;
-//         int sizeV{0};
-//         memcpy(&sizeV, data, sizeof(sizeV)); // получаем размер вектора
-   
-//         if (sizeV > 0)
-//         {
-//             resData.resize(sizeV);
-//             memcpy(&resData[0], data + sizeof(sizeV), (size - sizeof(sizeV))); // заполняем вектор данными
-
-//         }
-//         return std::move(resData);
-//     }
 
 private:
     std::map<int, T> _table;

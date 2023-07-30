@@ -11,15 +11,13 @@
 
 struct User
 {
-    friend class DB;
-
+    friend class TCP_Server;
 private:
     std::string _name;
     std::string _login;
     std::string _pass;
     int _messageCount{0};
     long long int _id{-1};
-    static long long int _currentId;
     bool _isAdmin{false};   // true if the user is an admin
     bool _isBanned{false};  // true if the user is an banned
     bool _isDeleted{false}; // true if the user is an deleted account
@@ -54,6 +52,8 @@ private:
     void deletedMessage();
 
 public:
+    static long long int _currentId;
+
     // default init without parameters
     User() = default;
 

@@ -6,8 +6,7 @@
 
 #pragma once
 #include <memory>
-#include <vector>
-
+#include <string>
 template <typename T>
 class IDBCore
 {
@@ -21,7 +20,5 @@ public:
     virtual std::unique_ptr<T> getDataById(int id) const = 0;
     virtual IDBCore<T> &operator--(int ID) = 0;
     virtual ~IDBCore() = default;
-    virtual void clearData() = 0;
-    // virtual char *parseDataToBinary(int &size) = 0;
-    // virtual std::vector<char*> parseToDataFromBinary(int size, char *data) = 0;
+    virtual bool isUnique(std::string &login) = 0;
 };

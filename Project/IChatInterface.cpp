@@ -1,5 +1,6 @@
 
 #include "IChatInterface.h"
+#include "EncodePassword.h"
 
 chat::Results IChatInterface::login()
 {
@@ -39,7 +40,9 @@ chat::Results IChatInterface::login()
     do
     {
         std::string password = getPass.IOgetlineThrough(true);
-        validate = db->isCorrectPassword(user->getId(), password);
+        EncodePassword::encodePassword(password);
+        validate = ((*user).getUserPassword() == password);
+        
         if (!validate)
         {
             std::cout << "Неверный пароль: " << std::endl;
@@ -192,8 +195,8 @@ void IChatInterface::messagesList(std::unique_ptr<Message[]> messages)
     for (int i{pg_StartItem}; i < pg_EndItem && messages != nullptr; i++)
     {
         auto msgUser = db->getUserById(messages[i].getAuthorID());
-
         std::cout << std::endl;
+
         std::cout
             << i + 1 << ". "
             << StampToTime(messages[i].getDate()) + " "

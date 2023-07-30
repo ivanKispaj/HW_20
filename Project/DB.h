@@ -14,17 +14,22 @@
 #include <fstream>
 #include <filesystem>
 #include <stdlib.h>
-
+#include "ChatClient.h"
 
 class DB
 {
 
     IDBCore<User> *_userDB = new DBCoreMap<User>();          // create table User
-    IDBCore<Message> *_messageDB = new DBCoreMap<Message>(); // create table Message
-    std::string _fileBaseDir = "./bin/";
-    std::string _usersFile = "Users.txt";
-    std::string _messagesFile = "Messages.txt";
+    mutable IDBCore<Message> *_messageDB = new DBCoreMap<Message>(); // create table Message
+    ChatClient _server;
+    CommandToServer _command{EMPTY};
 public:
+
+    void startClient()
+    {
+      //  _server.responseLoopstart();
+    }
+
     /// @brief default init
     DB() = default;
 
@@ -35,9 +40,6 @@ public:
         delete _messageDB;
     }
 
-    void saveToFileData();
-    void loadMessagesFromFile();
-    bool loadUsersFromFile();
 
     /// @brief adds a new user to the database
     /// @param user struct User
@@ -71,28 +73,28 @@ public:
 
     /// @brief Returns an array of users
     /// @return  if the array is not empty - std::unique_ptr<User[]> , nullptr if the array is empty!
-    const std::unique_ptr<User[]> getAllUsers() const;
+    const std::unique_ptr<User[]> getAllUsers() ;
 
     /// @brief Get a user by login
     /// @param login string -> user login
     /// @param exception
     /// @return Returning a pointer to a user object
-    const std::unique_ptr<User> getUserByLogin(const std::string &login, bool exception = false) const;
+    const std::unique_ptr<User> getUserByLogin(const std::string &login, bool exception = false);
 
     /// @brief Get a user by ID
     /// @param userId
     /// @return
-    const std::unique_ptr<User> getUserById(const int &userId) const;
+    const std::unique_ptr<User> getUserById(const int &userId);
 
     /// @brief Returns the size of the user array
     /// @return  int user array size
-    int usersCount() const;
+    int usersCount();
 
     // /// @brief Returns an array of all messages
     // /// @return if the array is not empty - std::unique_ptr<Message[]>, nullptr if the array is empty!
     // const std::unique_ptr<Message[]> getAllMessages() const;
 
-    const std::unique_ptr<Message> getMessage(const int &messageId) const;
+    const std::unique_ptr<Message> getMessage(const int &messageId);
 
     /// @brief Updates the user's data (name, login), except for the password!
     /// @param user struct User
@@ -109,22 +111,25 @@ public:
     /// @param user2Id int ID of the second user
     /// @param size the reference is the size of the array, the created size of the array will be written to it
     /// @return std::unique_ptr<Message[]> Returns an array
-    const std::unique_ptr<Message[]> getAllPrivateMessagesForUsersById(int user1Id, int user2Id, int &size) const;
+    const std::unique_ptr<Message[]> getAllPrivateMessagesForUsersById(int user1Id, int user2Id, int &size) ;
 
     /// @brief Returns an array of all incoming/outgoing Private messages between user in chronological ascending order
     /// @param userId
     /// @param size the reference is the size of the array, the created size of the array will be written to it
     /// @return std::unique_ptr<Message[]> Returns an array
-    const std::unique_ptr<Message[]> getAllPrivateMessagesForUserById(int userId, int &size) const;
+    const std::unique_ptr<Message[]> getAllPrivateMessagesForUserById(int userId, int &size) ;
 
     /// @brief Returns an array of all incoming/outgoing Public messages between users with ID in chronological ascending order
     /// @param Id int ID of the user
     /// @param size the reference is the size of the array, the created size of the array will be written to it
     /// @return std::unique_ptr<Message[]> Returns an array
-    const std::unique_ptr<Message[]> getAllPublicMessagesForUserById(int Id, int &size) const;
+    const std::unique_ptr<Message[]> getAllPublicMessagesForUserById(int Id, int &size);
 
     /// @brief Returns an array of all incoming/outgoing Public chronological ascending order
     /// @param size the reference is the size of the array, the created size of the array will be written to it
     /// @return std::unique_ptr<Message[]> Returns an array
-    const std::unique_ptr<Message[]> getAllPublicMessages(int &size) const;
+    const std::unique_ptr<Message[]> getAllPublicMessages(int &size);
+
+    void loadMessagesFromServer();
+    void loadUsersFromServer();
 };

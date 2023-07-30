@@ -11,12 +11,11 @@
 struct Message
 {
 
-    friend class DB;
-
+    friend class TCP_Server;
     // true - a message from a private chat
     // false = true - a message from a public chat
     bool isPrivate{false};
-
+    static long long int _currentId;
     /// @brief default init
     Message() = default;
 
@@ -90,14 +89,17 @@ struct Message
 
     char *parseToBinaryData(int &size);
     void parseFromBinaryData(char *data);
-
+    std::string getUserLogin()
+    {
+        return "";
+    }
+    
 private:
     std::string _message;
     int _authorID = 0;
     int _recipientID = 0;
     long long int _date{0};
     int _id{0};
-    static long long int _currentId;
     // Private methods for Friends "DB"
 
     /// @brief set date Unix Timestamp

@@ -8,4 +8,4 @@ int main()
 {
     Chat::run();
     return 0;
-}
+};

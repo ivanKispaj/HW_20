@@ -5,7 +5,7 @@
 #include "ChatUserInterface.h"
 #include "ChatAdminInterface.h"
 #include "UserInput.h"
-
+#include "ChatClient.h"
 class Chat
 {
 private:
@@ -19,21 +19,8 @@ public:
 void Chat::run()
 {
     std::unique_ptr<DB> db = std::make_unique<DB>();
-    if (!db->loadUsersFromFile())
-    {
-        std::cout << "Create admin and complain_bot users!\n";
-        User service_admin("admin", "admin", "1234");
-        service_admin.setIsAdmin(true);
-        db->addUser(service_admin);
-        User service_bot("complaint_bot", "complaint_bot", "uijyh6758r9ifSDFG4rdfcvgtre"); // Service Admin userID = 1;
-        db->addUser(service_bot);                                                                // бот которому отсылаются жалобы пользователей. userID = 2;
-   
-    db->loadMessagesFromFile();
-    std::cout << "Логин сервисного администратора: admin, пароль: 1234" << std::endl;
-    std::cout << "Рекомендуем сменить пароль. Войдите в чат -> настройки профиля." << std::endl;
-    std::cout << "Это сообщение больше не будет отображаться." << std::endl;
-    std::cout << std::endl;
-    }
+    db->startClient();
+
     ChatUserInterface userInterface;
     ChatAdminInterface adminInterface;
 
@@ -74,5 +61,5 @@ void Chat::run()
         }
     } while (result != chat::app_exit);
     std::cout << "Вы вышли из чата. До свидания." << std::endl;
-    db->saveToFileData();
+   // db->saveToFileData();
 }

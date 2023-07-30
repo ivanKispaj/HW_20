@@ -15,7 +15,6 @@ long long int User::_currentId;
 User::User(const std::string &name, const std::string &login, const std::string &pass) : _name(name), _login(login), _pass(pass)
 {
     EncodePassword::encodePassword(_pass);
-    //setUserPassword(pass);
     setCurrentID();
 }
 

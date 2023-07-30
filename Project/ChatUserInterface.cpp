@@ -96,7 +96,8 @@ chat::Results ChatUserInterface::registration()
     // При удачном завершении регистрации - переход в чат
     User _user(name, login, password);
     db->addUser(_user);
-    user = std::make_unique<User>(_user);
+    std::unique_ptr<User> us = db->getUserByLogin(_user.getUserLogin());
+    user =  std::move(us);//std::make_unique<User>(_user);
     return publicChat();
 }
 
@@ -128,7 +129,6 @@ chat::Results ChatUserInterface::publicChat()
     do
     {
         auto messages = db->getAllPublicMessages(pg_MaxItems);
-
         if (messages == nullptr)
         {
             std::cout << "В этом чате нет сообщений. Начните общение первым." << std::endl;

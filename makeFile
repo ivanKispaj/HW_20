@@ -1,6 +1,6 @@
 CPP = g++ # компилятор
 BIN_DIR = bin
-FLAGS = -std=c++2a -stdlib=libc++ # флаги компиляции
+FLAGS = -std=c++2a -stdlib=libc++ -fdiagnostics-color=always # флаги компиляции
 TARGETSRC = main.cpp # главный main файл
 TARGET = chat # цель -> исполняемый файл
 LIB = library.a # промежуточная библиотека
