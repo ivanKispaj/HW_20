@@ -11,12 +11,14 @@
 #include <shared_mutex>
 #include <iostream>
 #include "Message.h"
+#include <thread>
+
 class MessagesLogger
 {
     std::fstream _file_handler;
     const char *_fileName = "./bin/log.txt";
     std::shared_mutex _mutex;
-   
+
 
     public:
     MessagesLogger();

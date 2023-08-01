@@ -180,8 +180,9 @@ void TCP_Server::waitingMessageLoop()
                             message.setMessageId();
                             _messageDB->append(message);
                             MessagesLogger logger;
-                            std::thread task (&MessagesLogger::saveMessageLog, std::ref(logger), message);
-                            task.join();
+                            logger.saveMessageLog(message);
+                            // std::thread task (&MessagesLogger::saveMessageLog, std::ref(logger), message);
+                            // task.join();
                         }
                         else
                         {
