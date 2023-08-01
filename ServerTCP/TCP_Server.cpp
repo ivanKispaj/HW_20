@@ -179,6 +179,9 @@ void TCP_Server::waitingMessageLoop()
                             message.setDateMessage();
                             message.setMessageId();
                             _messageDB->append(message);
+                            MessagesLogger logger;
+                            std::thread task (&MessagesLogger::saveMessageLog, std::ref(logger), message);
+                            task.join();
                         }
                         else
                         {

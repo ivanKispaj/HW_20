@@ -21,8 +21,8 @@
 #include "User.h"
 #include "Message.h"
 #include <stdlib.h>
+#include "MessagesLogger.h"
 
-#define MESSAGE_LENGTH 4096 // Максимальный размер буфера для данных
 #define PORT 45000          // Будем использовать этот номер порта
 
 class TCP_Server
