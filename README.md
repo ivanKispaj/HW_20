@@ -32,9 +32,11 @@
 
 Для работы сервера необходимо чтобы был установлен mysql! 
 создаете базу данных пустую -> mysql> 
+
             CREATE DATABASE dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
             USE dbname;
 создаете пользователя ->
+
             CREATE USER 'you_user'@'localhost' IDENTIFIED BY 'password';
             GRANT ALL PRIVILEGES ON dbname . * TO 'you_user'@'localhost';
             FLUSH PRIVILEGES;
@@ -42,6 +44,7 @@
 реализованны все методы для работы чата.
 в файле -> config.txt необходимо прописать
 данные для подключения к базе данных.:
+
             dbname
             user
             host
@@ -49,6 +52,7 @@
 
  при первом запуске сервера он создаст в базе 
 необходимые таблицы, и 2 дефолтных пользователей,
+
             admin,
             comlain_bot
 
