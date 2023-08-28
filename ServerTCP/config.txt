@@ -1,0 +1,6 @@
+DataBase:
+host = "localhost"
+dataBaseName = "console_chat"
+userLogin = "chatAdmin"
+userPassword = "Plknf0q3fv51qf!"
+

@@ -7,6 +7,10 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include <chrono>
+#include <memory>
+#include <vector>
+#include "mysql.h"
 
 struct Message
 {
@@ -87,13 +91,18 @@ struct Message
     friend std::ostream &operator<<(std::ostream &os, const Message &obj);
     friend std::istream &operator>>(std::istream &is, Message &obj);
 
+    std::vector<std::string> getQueryValuesForInsert();
+    std::vector<std::string> getQueryValueForUpdate();
+
     char *parseToBinaryData(int &size);
     void parseFromBinaryData(char *data);
     std::string getUserLogin()
     {
         return "";
     }
-    
+
+    void parseFromMysqlData(MYSQL_ROW data);
+
 private:
     std::string _message;
     int _authorID = 0;

@@ -13,36 +13,29 @@
 */
 
 #pragma once
+
 #include <string>
+#include <sstream>
+
+typedef unsigned int uint;
 
 class EncodePassword
 {
+    static const int one_block_size_bytes{64};
+    static const int one_block_size_uints{16};
+    static const int block_expend_size_uints{80};
+
+    static const int SHA1HASHLENGTHBYTES{20};
+    static const int SHA1HASHLENGTHUINTS{5};
+
+    typedef uint *Block;
+    typedef uint ExpendBlock[80];
+
+    EncodePassword();
+
+    static uint cycle_shift_left(uint val, int bit_count);
+    static uint bring_to_human_view(uint val);
 public:
-    /// @brief Password encoding, using a bit shift to the left with the addition of salt
-    /// @param pass std::string password
-    static void encodePassword(std::string &pass)
-    {
-        std::string _salt = "POSVoqe9)!3#kfafkqfKLNOEQIg09#G";
-
-        std::string out;
-        int index = 0;
-        while (index < pass.size())
-        {
-            char ch = pass[index];
-            char symbol = ch - pass[pass.size() - index] + _salt[index];
-            out.push_back(symbol);
-            out.push_back(_salt[index]);
-            index++;
-        }
-
-        while (index < _salt.size())
-        {
-            char ch = _salt[index] >> 1;
-            char symbol = ch + '!';
-            out.push_back(symbol);
-            index++;
-        }
-
-        pass = out;
-    }
+    static void sha1(std::string &value);
 };
+

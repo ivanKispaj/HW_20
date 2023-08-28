@@ -40,11 +40,11 @@ chat::Results IChatInterface::login()
     do
     {
         std::string password = getPass.IOgetlineThrough(true);
-        EncodePassword::encodePassword(password);
+        EncodePassword::sha1(password);
         validate = ((*user).getUserPassword() == password);
-        
         if (!validate)
         {
+  
             std::cout << "Неверный пароль: " << std::endl;
             endInput = loginCancel.IOgetline();
             if (endInput == chat::yes)

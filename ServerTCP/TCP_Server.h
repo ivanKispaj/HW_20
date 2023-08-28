@@ -15,15 +15,9 @@
 #include <stdio.h>
 #include <chrono>
 #include <vector>
-#include <fstream>
-#include <filesystem>
-#include "DBCoreMap.h"
-#include "User.h"
-#include "Message.h"
+#include "DBCoreMysql.h"
 #include <stdlib.h>
-#include "MessagesLogger.h"
-
-#define PORT 45000          // Будем использовать этот номер порта
+//#include "MessagesLogger.h"
 
 class TCP_Server
 {
@@ -63,16 +57,13 @@ class TCP_Server
 
     };
 
-    std::string _fileBaseDir = "./bin/";
-    std::string _usersFile = "Users.txt";
-    std::string _messagesFile = "Messages.txt";
-
+    int _port{45000};
     const char *_send = "send";
     const char *_received = "received";
     Status _status = stop;
 
     std::thread _connectionThread;
-    std::thread _waitingMessageThread;
+    std::thread _exitLoop;
 
     int _sockert_file_descriptor{0}, _connection{0}, _bind_status{0}, _connection_status{0};
     struct sockaddr_in _serveraddress, _client;
@@ -80,8 +71,9 @@ class TCP_Server
 
     std::mutex _connectMutex;
     std::vector<int> _connectionId;
-    IDBCore<User> *_userDB = new DBCoreMap<User>();
-    IDBCore<Message> *_messageDB = new DBCoreMap<Message>();
+
+    IDBCore<User> *_userDB = new DBCoreMysql<User>("users");
+    IDBCore<Message> *_messageDB = new DBCoreMysql<Message>("messages");
 
     void connectionLoop();
     void waitingMessageLoop();
@@ -94,9 +86,8 @@ class TCP_Server
 
 public:
     TCP_Server() = default;
-
+    ~TCP_Server() = default;
     void start_server();
-    void saveToFileData();
-    void loadMessagesFromFile();
-    bool loadUsersFromFile();
+    void createDefaultUser();
+    void configureServer();
 };

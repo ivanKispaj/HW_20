@@ -23,6 +23,8 @@ class DB
     mutable IDBCore<Message> *_messageDB = new DBCoreMap<Message>(); // create table Message
     ChatClient _server;
     CommandToServer _command{EMPTY};
+
+    char *prepareBinaryQueryData(char * binaryData,int size);
 public:
 
     void startClient()
@@ -99,7 +101,7 @@ public:
     /// @brief Updates the user's data (name, login), except for the password!
     /// @param user struct User
     /// @return true if successful, false if not a unique login, no user, no users
-    bool updateUserData(const User &user);
+    bool updateUserData(User &user);
 
     /// @brief
     /// @param message

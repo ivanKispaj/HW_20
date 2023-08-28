@@ -6,8 +6,6 @@
 //
 
 #include "Message.h"
-#include <chrono>
-#include <memory>
 
 long long int Message::_currentId;
 
@@ -125,6 +123,22 @@ std::ostream &operator<<(std::ostream &os, const Message &obj)
     return os;
 }
 
+std::vector<std::string> Message::getQueryValuesForInsert()
+{
+    std::vector<std::string> ret;
+    std::string value{"'"};
+    value.append(_message);
+    value.append("','");
+    value.append(isPrivate ? "1" : "0");
+    value.append("','");
+    value.append(std::to_string(_authorID));
+    value.append("','");
+    value.append(std::to_string(_recipientID));
+    value.append("',");
+    ret.push_back(value);
+    return ret;
+}
+
 char *Message::parseToBinaryData(int &size)
 {
     size += sizeof(isPrivate);
@@ -171,4 +185,21 @@ void Message::parseFromBinaryData(char *data)
     memcpy(&_date, data + shift, sizeof(_date));
     shift += sizeof(_date);
     memcpy(&_id, data + shift, sizeof(_id));
+}
+
+void Message::parseFromMysqlData(MYSQL_ROW data)
+{
+    _id = std::atoi(data[0]);
+    _message = std::string(data[1]);
+    isPrivate = (*data[2] == '1');
+    _authorID = std::atoi(data[3]);
+    _recipientID = std::atoi(data[4]);
+    _date = std::atoi(data[5]);
+}
+
+std::vector<std::string> Message::getQueryValueForUpdate()
+{
+    // Доработать на будущий функционал!
+    std::vector<std::string> str;
+    return str;
 }

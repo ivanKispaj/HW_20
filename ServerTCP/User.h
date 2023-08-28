@@ -8,15 +8,20 @@
 #pragma once
 #include <string>
 #include <fstream>
-
+#include "DB.h"
+#include "EncodePassword.h"
+#include <vector>
+#include <iostream>
+#include "mysql.h"
 struct User
 {
     friend class TCP_Server;
+
 private:
     std::string _name;
     std::string _login;
     std::string _pass;
-    int _messageCount{0};
+    // int _messageCount{0};
     long long int _id{-1};
     bool _isAdmin{false};   // true if the user is an admin
     bool _isBanned{false};  // true if the user is an banned
@@ -31,13 +36,13 @@ private:
     /// @param pass
     void copyUserPassword(const std::string &pass);
 
-    /// @brief sets the number of messages the user has when copying it
-    /// @param cout int
-    void setMessageCout(int cout);
+    // /// @brief sets the number of messages the user has when copying it
+    // /// @param cout int
+    // void setMessageCout(int cout);
 
-    /// @brief increases the message counter when adding messages to the database (DB)
-    ///        private method, the DB class has access to
-    void addedMessage(int count = 1);
+    // /// @brief increases the message counter when adding messages to the database (DB)
+    // ///        private method, the DB class has access to
+    // void addedMessage(int count = 1);
 
     /// @brief Creates a user ID when creating a user
     ///        private method, the DB class has access to
@@ -95,9 +100,9 @@ public:
     /// @param login string
     void setUserLogin(const std::string &login); // set the user's login
 
-    /// @brief To get the number of messages from the user - outgoing/incoming
-    /// @return int outgoing/incoming count
-    int getMessagesCount() const;
+    // /// @brief To get the number of messages from the user - outgoing/incoming
+    // /// @return int outgoing/incoming count
+    // int getMessagesCount() const;
 
     /// @brief public method of checking whether the user is an administrator
     /// @return  return  true -> user is Admin, false -> user is not Admin
@@ -133,7 +138,13 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const User &obj);
 
+    std::vector<std::string> getQueryValuesForInsert();
+
+    std::vector<std::string> getQueryValueForUpdate();
+
     char *parseToBinaryData(int &size);
 
     void parseFromBinaryData(char *data);
+
+    void parseFromMysqlData(MYSQL_ROW data);
 };

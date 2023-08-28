@@ -1,9 +1,8 @@
-// 
+//
 // MessagesLogger.h
 // 2023-08-01
 // Ivan Konishchev
 //
-
 
 #pragma once
 #include <fstream>
@@ -16,14 +15,13 @@
 class MessagesLogger
 {
     std::fstream _file_handler;
-    const char *_fileName = "./bin/log.txt";
+    const char *_fileName = "../Desktop/ServerTCP/data/log.txt";
     std::shared_mutex _mutex;
+    void saveLog(const std::string &logData);
 
-
-    public:
+public:
     MessagesLogger();
     ~MessagesLogger();
     void saveMessageLog(const Message &message);
     std::string loadMessageLogLine();
-
 };

@@ -11,7 +11,7 @@ template <typename T>
 class IDBCore
 {
 public:
-    virtual void append(T &value) = 0;
+    virtual bool append(T &value) = 0;
     virtual int count() const = 0;
     virtual bool isEmpty() const = 0;
     virtual void deleteById(int id) = 0;
@@ -21,4 +21,6 @@ public:
     virtual IDBCore<T> &operator--(int ID) = 0;
     virtual ~IDBCore() = default;
     virtual bool isUnique(std::string &login) = 0;
+    virtual void saveToFileData(){};
+    virtual bool loadFromFileData() { return false; };
 };

@@ -1,6 +1,6 @@
 CPP = g++ # компилятор
-BIN_DIR = $(PWD)/bin
-FLAGS = -std=c++2a -stdlib=libc++ -fdiagnostics-color=always # флаги компиляции
+BIN_DIR = ChatClient/bin
+FLAGS = -std=c++2a -stdlib=libc++ -fdiagnostics-color=always  # флаги компиляции
 TARGETSRC = main.cpp # главный main файл
 TARGET = chat # цель -> исполняемый файл
 LIB = library.a # промежуточная библиотека
@@ -8,16 +8,17 @@ SOURCES = $(patsubst %.cpp,%,$(wildcard ./Project/*.cpp)) # файлы ресу�
 
 # Основная цель зависит от библиотеки lib
 all: 	$(TARGETSRC) lib
-		$(CPP) $(FLAGS) -o $(BIN_DIR)/$(TARGET) $(TARGETSRC) -L. $(BIN_DIR)/$(LIB)
-		rm -rf $(SOURCES:=.o) $(BIN_DIR)/$(LIB)
+		$(CPP) $(FLAGS) -o  $(PWD)/$(BIN_DIR)/$(TARGET) $(TARGETSRC) -L.  $(PWD)/$(BIN_DIR)/$(LIB)
+		rm -rf $(SOURCES:=.o)  $(PWD)/$(BIN_DIR)/$(LIB)
 lib: 					# В цикле создаем все объектные файлы
-		mkdir -p $(BIN_DIR)
+		mkdir -p  $(PWD)/$(BIN_DIR)
 		$(foreach file,$(SOURCES),\
 		$(CPP) $(FLAGS) -c -o $(file).o $(file).cpp ;)
-		ar rc $(BIN_DIR)/$(LIB) $(SOURCES:=.o) 
+		ar rc  $(PWD)/$(BIN_DIR)/$(LIB) $(SOURCES:=.o) 
 
-install:
-	install $(BIN_DIR)/$(TARGET) ~/Desktop
+install: all
+	mkdir -p ~/Desktop/$(BIN_DIR)
+	install $(PWD)/$(BIN_DIR)/$(TARGET) ~/Desktop/$(BIN_DIR)
 
 uninstall: 
 	rm -rf ~/Desktop/$(TARGET)

@@ -137,7 +137,6 @@ public:
         {
             char *temp = new char[size];
             recv(_socket_file_descriptor, temp, size, MSG_WAITALL);
-            // read(_socket_file_descriptor, temp, size);
             return temp;
         }
         return nullptr;

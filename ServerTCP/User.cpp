@@ -6,15 +6,14 @@
 //
 
 #include "User.h"
-#include "DB.h"
-#include "EncodePassword.h"
+
 long long int User::_currentId;
 
 // Public methods
 
 User::User(const std::string &name, const std::string &login, const std::string &pass) : _name(name), _login(login), _pass(pass)
 {
-    EncodePassword::encodePassword(_pass);
+    EncodePassword::sha1(_pass);
     setCurrentID();
 }
 
@@ -48,10 +47,10 @@ void User::setUserLogin(const std::string &login)
     _login = login;
 }
 
-int User::getMessagesCount() const
-{
-    return _messageCount;
-}
+// int User::getMessagesCount() const
+// {
+//     return _messageCount;
+// }
 
 bool User::isAdmin() const
 {
@@ -82,7 +81,7 @@ void User::deleteThisData()
 {
     _name = "deleted";
     std::string pass = "DeLeTeD";
-    EncodePassword::encodePassword(pass);
+    EncodePassword::sha1(pass);
     _pass = pass;
     _isAdmin = false;
     _isBanned = false;
@@ -94,7 +93,7 @@ User &User::operator=(const User &user)
     _name = user._name;
     _login = user._login;
     _pass = user._pass;
-    _messageCount = user._messageCount;
+    // _messageCount = user._messageCount;
     _id = user._id;
     _isAdmin = user._isAdmin;
     _isBanned = user._isBanned;
@@ -107,7 +106,7 @@ User &User::operator=(const User &user)
 void User::setUserPassword(const std::string &pass)
 {
     _pass = pass;
-    EncodePassword::encodePassword(_pass);
+    EncodePassword::sha1(_pass);
 }
 
 void User::copyUserPassword(const std::string &pass)
@@ -115,15 +114,15 @@ void User::copyUserPassword(const std::string &pass)
     _pass = pass;
 }
 
-void User::setMessageCout(int cout)
-{
-    _messageCount = cout;
-}
+// void User::setMessageCout(int cout)
+// {
+//     _messageCount = cout;
+// }
 
-void User::addedMessage(int count)
-{
-    _messageCount = _messageCount + count;
-}
+// void User::addedMessage(int count)
+// {
+//     _messageCount = _messageCount + count;
+// }
 
 void User::setCurrentID()
 {
@@ -136,13 +135,13 @@ void User::setUserID(int id)
     _id = id;
 }
 
-void User::deletedMessage()
-{
-    if (_messageCount > 0)
-    {
-        _messageCount--;
-    }
-}
+// void User::deletedMessage()
+// {
+//     if (_messageCount > 0)
+//     {
+//         _messageCount--;
+//     }
+// }
 
 void User::saveUserPassword(const std::string &pass)
 {
@@ -197,6 +196,29 @@ std::ostream &operator<<(std::ostream &os, const User &obj)
     }
 }
 
+std::vector<std::string> User::getQueryValuesForInsert()
+{
+    // (name, login, isAdmin, isDeleted, isBanned)
+    // values -> 'admin','admin','1','0','0','
+    // ret [0] -> 'admin','admin','1','0','0' [1] -> wegknweign'
+    std::vector<std::string> ret;
+    std::string values{"'"};
+    values.append(getUserName());
+    values.append("','");
+    values.append(getUserLogin());
+    values.append("','");
+    values.append((_isAdmin ? "1" : "0"));
+    values.append("','");
+    values.append((_isDeleted ? "1" : "0"));
+    values.append("','");
+    values.append(_isBanned ? "1" : "0");
+    values.append("'");
+    ret.push_back(values);
+    ret.push_back(getUserPassword());
+    values.append("'");
+    return ret;
+}
+
 char *User::parseToBinaryData(int &size)
 {
     size += sizeof(_id); // размер поля id
@@ -210,7 +232,7 @@ char *User::parseToBinaryData(int &size)
     size += sizeof(_isBanned);
     size += sizeof(_isDeleted);
 
-    char* data = new char[size];
+    char *data = new char[size];
     int shift{0}, sizeString{0};
 
     memcpy(data, &_id, sizeof(_id));
@@ -236,7 +258,6 @@ char *User::parseToBinaryData(int &size)
     shift += sizeof(_isBanned);
     memcpy(data + shift, &_isDeleted, sizeof(_isDeleted));
     return data;
-
 }
 
 void User::parseFromBinaryData(char *data)
@@ -264,4 +285,27 @@ void User::parseFromBinaryData(char *data)
     memcpy(&_isBanned, data + shift, sizeof(_isBanned));
     shift += sizeof(_isBanned);
     memcpy(&_isDeleted, data + shift, sizeof(_isDeleted));
+}
+
+void User::parseFromMysqlData(MYSQL_ROW data)
+{
+    _id = std::atoi(data[0]);
+    _name = std::string(data[1]);
+    _login = std::string(data[2]);
+    _isAdmin = (*data[3] == '1');
+    _isDeleted = (*data[4] == '1');
+    _isBanned = (*data[5] == '1');
+    _pass = std::string(data[7]);
+}
+
+std::vector<std::string> User::getQueryValueForUpdate()
+{
+    std::vector<std::string> data;
+    std::string ret(" name = '" + _name + "', isAdmin = '" + std::to_string(_isAdmin) + "', isDeleted = '" + std::to_string(_isDeleted) + "', isBanned = '" + std::to_string(_isBanned) + "'");
+    data.push_back(ret);
+    ret = _login;
+    data.push_back(ret);
+    ret = "user_pass = '" + _pass + "' WHERE users_id = '" + std::to_string(_id) + "'";
+    data.push_back(ret);
+    return data;
 }

@@ -14,7 +14,7 @@ long long int User::_currentId;
 
 User::User(const std::string &name, const std::string &login, const std::string &pass) : _name(name), _login(login), _pass(pass)
 {
-    EncodePassword::encodePassword(_pass);
+    EncodePassword::sha1(_pass);
     //setUserPassword(pass);
     setCurrentID();
 }
@@ -83,7 +83,7 @@ void User::deleteThisData()
 {
     _name = "deleted";
     std::string pass = "DeLeTeD";
-    EncodePassword::encodePassword(pass);
+    EncodePassword::sha1(pass);
     _pass = pass;
     _isAdmin = false;
     _isBanned = false;
@@ -108,7 +108,7 @@ User &User::operator=(const User &user)
 void User::setUserPassword(const std::string &pass)
 {
     _pass = pass;
-    EncodePassword::encodePassword(_pass);
+    EncodePassword::sha1(_pass);
 }
 
 void User::copyUserPassword(const std::string &pass)
